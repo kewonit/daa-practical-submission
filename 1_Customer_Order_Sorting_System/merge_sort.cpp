@@ -20,6 +20,7 @@ struct Order
     long long timestamp;
 };
 
+// Merge two sorted segments of the orders array into a single sorted segment by timestamp
 void merge(vector<Order> &a, int left, int mid, int right)
 {
     int n1 = mid - left + 1;
@@ -40,6 +41,7 @@ void merge(vector<Order> &a, int left, int mid, int right)
         a[k++] = R[j++];
 }
 
+// Recursively divide the orders array and sort each half using merge sort
 void mergeSort(vector<Order> &a, int left, int right)
 {
     if (left >= right)
@@ -50,6 +52,7 @@ void mergeSort(vector<Order> &a, int left, int right)
     merge(a, left, mid, right);
 }
 
+// Entry point: read orders, sort by timestamp, and output sorted list
 int main()
 {
     ios::sync_with_stdio(false);
