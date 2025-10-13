@@ -1,7 +1,7 @@
 /*
  * File: merge_sort.cpp
- * Author: kewonit
- * Date: 2025-09-30
+ * Author: 123B1F052
+
  * Description: Implements Merge Sort algorithm to sort customer orders by timestamp.
  * Usage:
  *   Compile: g++ -O2 -std=c++17 merge_sort.cpp -o merge_sort

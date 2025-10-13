@@ -1,0 +1,15 @@
+Maximum Utility Value: 300
+Total Weight Used: 48 kg (Capacity: 50 kg)
+
+Items Selected:
+ID	Name			Weight	Value	Priority
+-----------------------------------------------------------
+1	Medicine Kit		15	100	High
+2	Antibiotics		8	80	High
+7	First Aid		5	50	High
+3	Food Packets		20	60	Medium
+
+Priority-wise breakdown:
+High priority items: 3
+Medium priority items: 1
+Low priority items: 0

@@ -1,0 +1,8 @@
+Maximum Utility Value: 240.00
+
+Items Selected:
+ID	Name			Weight	Value	Fraction
+------------------------------------------------------
+1	Medicine Kit		10	60	1
+2	Food Packets		20	100	1
+3	Drinking Water		30	120	0.67

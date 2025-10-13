@@ -1,0 +1,22 @@
+7 50
+1
+Medicine Kit
+15 100 1
+2
+Antibiotics
+8 80 1
+3
+Food Packets
+20 60 2
+4
+Drinking Water
+12 40 2
+5
+Blankets
+10 30 3
+6
+Tents
+25 70 3
+7
+First Aid
+5 50 1

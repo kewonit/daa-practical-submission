@@ -1,0 +1,16 @@
+5 1
+101
+The Shawshank Redemption
+9.3 1994 15000000
+102
+The Godfather
+9.2 1972 12000000
+103
+The Dark Knight
+9.0 2008 20000000
+104
+Pulp Fiction
+8.9 1994 10000000
+105
+Forrest Gump
+8.8 1994 18000000

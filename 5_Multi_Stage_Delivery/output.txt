@@ -1,0 +1,5 @@
+Minimum delivery cost: 12
+Optimal route: 0 -> 2 -> 4 -> 6
+
+Stage breakdown:
+Node 0 (Stage 0) -> Node 2 (Stage 1) -> Node 4 (Stage 2) -> Node 6 (Stage 3)
