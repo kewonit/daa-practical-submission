@@ -169,6 +169,8 @@ Maximize the total utility value of supplies transported while ensuring the tota
 
 ---
 
+<<<<<<< HEAD
+
 ### 7. University Timetable Scheduling
 
 **Scenario:** University Exam Scheduling System  
