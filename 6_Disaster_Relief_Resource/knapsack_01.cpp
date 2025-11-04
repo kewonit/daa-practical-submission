@@ -1,13 +1,3 @@
-/*
- * File: knapsack_01.cpp
- * Author: 123B1F052
-
- * Description: Implements 0/1 Knapsack algorithm for disaster relief resource allocation.
- * Usage:
- *   Compile: g++ -O2 -std=c++17 knapsack_01.cpp -o knapsack_01
- *   Run:     ./knapsack_01 < input.txt > output.txt
- */
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -21,28 +11,25 @@ struct Item
     string name;
     int weight;
     int value;
-    int priority; // 1=high (medicine), 2=medium (food), 3=low (others)
+    int priority;
     bool selected;
 };
 
-// Solve 0/1 knapsack using dynamic programming
+// Dynamic programming table-building approach for optimal item selection
 int knapsack01(vector<Item> &items, int capacity, vector<vector<int>> &dp)
 {
     int n = items.size();
 
-    // Build DP table
     for (int i = 1; i <= n; i++)
     {
         for (int w = 0; w <= capacity; w++)
         {
-            // If current item weight exceeds capacity, skip it
             if (items[i - 1].weight > w)
             {
                 dp[i][w] = dp[i - 1][w];
             }
             else
             {
-                // Take maximum of including or excluding current item
                 dp[i][w] = max(dp[i - 1][w],
                                dp[i - 1][w - items[i - 1].weight] + items[i - 1].value);
             }
@@ -52,16 +39,14 @@ int knapsack01(vector<Item> &items, int capacity, vector<vector<int>> &dp)
     return dp[n][capacity];
 }
 
-// Backtrack to find which items were selected
+// Traces back through DP table to identify which items were included
 void findSelectedItems(vector<Item> &items, int capacity, const vector<vector<int>> &dp)
 {
     int n = items.size();
     int w = capacity;
 
-    // Trace back through DP table
     for (int i = n; i > 0 && w > 0; i--)
     {
-        // If value differs from previous row, item was included
         if (dp[i][w] != dp[i - 1][w])
         {
             items[i - 1].selected = true;
@@ -70,69 +55,40 @@ void findSelectedItems(vector<Item> &items, int capacity, const vector<vector<in
     }
 }
 
-// Sort items by priority for better allocation
+// Prioritizes high-value items within the same priority level
 bool comparePriority(const Item &a, const Item &b)
 {
     if (a.priority != b.priority)
-        return a.priority < b.priority; // lower number = higher priority
-    return a.value > b.value;           // if same priority, prefer higher value
+        return a.priority < b.priority;
+    return a.value > b.value;
 }
 
-// Entry point: read items and capacity, solve knapsack, output result
 int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int n, capacity;
+    // Hardcoded input data
+    int capacity = 50;
+    vector<Item> items = {
+        {1, "Medicine Kit", 15, 100, 1, false},
+        {2, "Antibiotics", 8, 80, 1, false},
+        {3, "Food Packets", 20, 60, 2, false},
+        {4, "Drinking Water", 12, 40, 2, false},
+        {5, "Blankets", 10, 30, 3, false},
+        {6, "Tents", 25, 70, 3, false},
+        {7, "First Aid", 5, 50, 1, false}};
 
-    if (!(cin >> n >> capacity))
-    {
-        cerr << "Invalid input format" << endl;
-        return 1;
-    }
-
-    // Validate inputs
-    if (n <= 0 || capacity <= 0)
-    {
-        cout << "0" << endl;
-        return 0;
-    }
-
-    vector<Item> items(n);
-
-    // Read item details
-    for (int i = 0; i < n; i++)
-    {
-        cin >> items[i].id;
-        cin.ignore();
-        getline(cin, items[i].name);
-        cin >> items[i].weight >> items[i].value >> items[i].priority;
-        cin.ignore();
-
-        // Validate item data
-        if (items[i].weight <= 0 || items[i].value < 0)
-        {
-            cerr << "Invalid item data for item " << items[i].id << endl;
-            return 1;
-        }
-
-        items[i].selected = false;
-    }
-
-    // Sort by priority first (optional optimization)
+    int n = items.size();
     sort(items.begin(), items.end(), comparePriority);
 
-    // Create DP table
+    // Build DP table for knapsack solution
     vector<vector<int>> dp(n + 1, vector<int>(capacity + 1, 0));
-
-    // Solve 0/1 knapsack
     int max_value = knapsack01(items, capacity, dp);
 
-    // Find which items were selected
     findSelectedItems(items, capacity, dp);
 
-    // Calculate total weight used
+    // Calculate total weight of selected items
     int total_weight = 0;
     for (const auto &item : items)
     {
@@ -142,7 +98,7 @@ int main()
         }
     }
 
-    // Output results
+    // Display results
     cout << "Maximum Utility Value: " << max_value << endl;
     cout << "Total Weight Used: " << total_weight << " kg (Capacity: " << capacity << " kg)" << endl;
     cout << "\nItems Selected:" << endl;
@@ -167,7 +123,7 @@ int main()
         }
     }
 
-    // Additional analysis
+    // Summary breakdown by priority
     cout << "\nPriority-wise breakdown:" << endl;
     int high_count = 0, medium_count = 0, low_count = 0;
     for (const auto &item : items)

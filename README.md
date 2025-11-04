@@ -197,3 +197,38 @@ Extend the solution to include room allocation constraints where exams in the sa
 An optimized exam schedule that minimizes the number of time slots required while ensuring no student has conflicting exams.
 
 ---
+
+### 8. N-Queens Problem
+
+**Scenario:** Classic Backtracking Problem  
+The N-Queens problem is a fundamental computational challenge where N chess queens must be placed on an N×N chessboard such that no two queens can attack each other. This requires that no two queens share the same row, column, or diagonal.
+
+**Role:** Algorithm Designer
+
+**Problem Model:**
+
+- **Chessboard:** N×N grid
+- **Queens:** N pieces to be placed
+- **Constraints:** No two queens in same row, column, or diagonal
+- **Solution Type:** All valid configurations or count of solutions
+
+**Requirements:**
+
+1. Implement a **Backtracking algorithm** to systematically explore all possible queen placements
+2. Use constraint checking to prune invalid branches early (pruning optimization)
+3. Generate all valid solutions or find the first valid solution efficiently
+4. Display solutions in a human-readable board format
+
+**Optimization Techniques:**
+
+- Early pruning of invalid placements
+- Efficient conflict detection using mathematical properties
+- Incremental validation instead of full board checking
+
+**Extension:**
+Optimize for larger board sizes (N > 20) using advanced techniques like constraint propagation or parallel processing.
+
+**Expected Outcome:**
+Find all valid N-Queen configurations efficiently using backtracking, demonstrating how systematic search with pruning solves constraint satisfaction problems.
+
+---
