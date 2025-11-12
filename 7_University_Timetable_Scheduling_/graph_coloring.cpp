@@ -8,18 +8,19 @@ using namespace std;
 
 struct Course
 {
-    int id;
-    string name;
-    int color;
-    int degree;
+    int course_id;
+    string course_name;
+    int time_slot;
+    int conflict_count;
 };
 
-// Verifies if a color assignment doesn't conflict with adjacent vertices
-bool isSafe(int vertex, int color, const vector<vector<int>> &graph, const vector<int> &colors)
+// check if color is safe for this node
+bool isSafe(int node_index, int color_choice, const vector<vector<int>> &graph, const vector<int> &node_colors)
 {
-    for (int adj : graph[vertex])
+    for (int i = 0; i < graph[node_index].size(); i++)
     {
-        if (colors[adj] == color)
+        int neighbor_node = graph[node_index][i];
+        if (node_colors[neighbor_node] == color_choice)
         {
             return false;
         }
@@ -27,114 +28,121 @@ bool isSafe(int vertex, int color, const vector<vector<int>> &graph, const vecto
     return true;
 }
 
-// Simple greedy approach that assigns colors sequentially
-int greedyColoring(int n, const vector<vector<int>> &graph, vector<int> &colors)
+// assign colors to nodes one by one
+int greedyColoring(int total_nodes, const vector<vector<int>> &graph, vector<int> &node_colors)
 {
-    fill(colors.begin(), colors.end(), -1);
-
-    colors[0] = 0;
-
-    int max_color = 0;
-
-    for (int v = 1; v < n; v++)
+    for (int i = 0; i < total_nodes; i++)
     {
-        set<int> unavailable;
-        for (int adj : graph[v])
+        node_colors[i] = -1;
+    }
+
+    node_colors[0] = 0;
+    int highest_color = 0;
+
+    for (int node = 1; node < total_nodes; node++)
+    {
+        set<int> used_colors;
+        for (int i = 0; i < graph[node].size(); i++)
         {
-            if (colors[adj] != -1)
+            int neighbor = graph[node][i];
+            if (node_colors[neighbor] != -1)
             {
-                unavailable.insert(colors[adj]);
+                used_colors.insert(node_colors[neighbor]);
             }
         }
 
-        int color = 0;
-        while (unavailable.count(color))
+        int chosen_color = 0;
+        while (used_colors.count(chosen_color))
         {
-            color++;
+            chosen_color++;
         }
 
-        colors[v] = color;
-        max_color = max(max_color, color);
+        node_colors[node] = chosen_color;
+        highest_color = max(highest_color, chosen_color);
     }
 
-    return max_color + 1;
+    return highest_color + 1;
 }
 
-// Advanced coloring that prioritizes vertices with highest saturation degree
-int dsaturColoring(int n, const vector<vector<int>> &graph, vector<int> &colors)
+// prioritize nodes with most color conflicts
+int dsaturColoring(int total_nodes, const vector<vector<int>> &graph, vector<int> &node_colors)
 {
-    fill(colors.begin(), colors.end(), -1);
-
-    vector<set<int>> saturation(n);
-    vector<int> degree(n, 0);
-
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < total_nodes; i++)
     {
-        degree[i] = graph[i].size();
+        node_colors[i] = -1;
     }
 
-    int colored_count = 0;
-    int max_color = 0;
+    vector<set<int>> neighbor_colors(total_nodes);
+    vector<int> node_degree(total_nodes, 0);
 
-    while (colored_count < n)
+    for (int i = 0; i < total_nodes; i++)
     {
-        int max_sat = -1;
-        int max_deg = -1;
-        int selected = -1;
+        node_degree[i] = graph[i].size();
+    }
 
-        for (int i = 0; i < n; i++)
+    int nodes_colored = 0;
+    int highest_color = 0;
+
+    while (nodes_colored < total_nodes)
+    {
+        int max_saturation = -1;
+        int max_degree = -1;
+        int selected_node = -1;
+
+        for (int node = 0; node < total_nodes; node++)
         {
-            if (colors[i] == -1)
+            if (node_colors[node] == -1)
             {
-                int sat = saturation[i].size();
-                if (sat > max_sat || (sat == max_sat && degree[i] > max_deg))
+                int saturation_degree = neighbor_colors[node].size();
+                if (saturation_degree > max_saturation || (saturation_degree == max_saturation && node_degree[node] > max_degree))
                 {
-                    max_sat = sat;
-                    max_deg = degree[i];
-                    selected = i;
+                    max_saturation = saturation_degree;
+                    max_degree = node_degree[node];
+                    selected_node = node;
                 }
             }
         }
 
         set<int> available_colors;
-        for (int c = 0; c <= max_color + 1; c++)
+        for (int color = 0; color <= highest_color + 1; color++)
         {
-            available_colors.insert(c);
+            available_colors.insert(color);
         }
 
-        for (int adj : graph[selected])
+        for (int i = 0; i < graph[selected_node].size(); i++)
         {
-            if (colors[adj] != -1)
+            int neighbor = graph[selected_node][i];
+            if (node_colors[neighbor] != -1)
             {
-                available_colors.erase(colors[adj]);
+                available_colors.erase(node_colors[neighbor]);
             }
         }
 
         int chosen_color = *available_colors.begin();
-        colors[selected] = chosen_color;
-        max_color = max(max_color, chosen_color);
+        node_colors[selected_node] = chosen_color;
+        highest_color = max(highest_color, chosen_color);
 
-        for (int adj : graph[selected])
+        for (int i = 0; i < graph[selected_node].size(); i++)
         {
-            if (colors[adj] == -1)
+            int neighbor = graph[selected_node][i];
+            if (node_colors[neighbor] == -1)
             {
-                saturation[adj].insert(chosen_color);
+                neighbor_colors[neighbor].insert(chosen_color);
             }
         }
 
-        colored_count++;
+        nodes_colored++;
     }
 
-    return max_color + 1;
+    return highest_color + 1;
 }
 
 int main()
 {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    int total_courses = 6;
+    int total_conflicts = 7;
+    int algorithm_choice = 2;
 
-    // Hardcoded input data
-    int n = 6, m = 7, algorithm = 2;
     vector<string> course_names = {
         "Data Structures",
         "Algorithms",
@@ -143,62 +151,59 @@ int main()
         "Computer Networks",
         "Software Engineering"};
 
-    vector<vector<int>> graph(n);
-    vector<pair<int, int>> conflicts = {
+    vector<vector<int>> conflict_graph(total_courses);
+    vector<pair<int, int>> conflict_pairs = {
         {0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 4}, {2, 3}, {3, 5}};
 
-    for (const auto &edge : conflicts)
+    for (int i = 0; i < conflict_pairs.size(); i++)
     {
-        int u = edge.first;
-        int v = edge.second;
-        graph[u].push_back(v);
-        graph[v].push_back(u);
+        int course_a = conflict_pairs[i].first;
+        int course_b = conflict_pairs[i].second;
+        conflict_graph[course_a].push_back(course_b);
+        conflict_graph[course_b].push_back(course_a);
     }
 
-    // Execute selected coloring algorithm
-    vector<int> colors(n);
-    int num_colors;
+    vector<int> time_slots(total_courses);
+    int slots_needed;
 
-    if (algorithm == 1)
+    if (algorithm_choice == 1)
     {
         cout << "Using Greedy Coloring Algorithm" << endl;
-        num_colors = greedyColoring(n, graph, colors);
+        slots_needed = greedyColoring(total_courses, conflict_graph, time_slots);
     }
     else
     {
         cout << "Using DSATUR Coloring Algorithm" << endl;
-        num_colors = dsaturColoring(n, graph, colors);
+        slots_needed = dsaturColoring(total_courses, conflict_graph, time_slots);
     }
 
-    cout << "\nMinimum exam slots needed: " << num_colors << endl;
+    cout << "\nMinimum exam slots needed: " << slots_needed << endl;
     cout << "\nExam Schedule:" << endl;
     cout << "========================================" << endl;
 
-    // Organize courses by assigned time slot
-    vector<vector<int>> slots(num_colors);
-    for (int i = 0; i < n; i++)
+    vector<vector<int>> courses_per_slot(slots_needed);
+    for (int course = 0; course < total_courses; course++)
     {
-        slots[colors[i]].push_back(i);
+        courses_per_slot[time_slots[course]].push_back(course);
     }
 
-    for (int slot = 0; slot < num_colors; slot++)
+    for (int slot = 0; slot < slots_needed; slot++)
     {
         cout << "\nTime Slot " << (slot + 1) << ":" << endl;
-        for (int course : slots[slot])
+        for (int i = 0; i < courses_per_slot[slot].size(); i++)
         {
+            int course = courses_per_slot[slot][i];
             cout << "  Course " << course << ": " << course_names[course] << endl;
         }
     }
 
-    // Display scheduling statistics
     cout << "\n========================================" << endl;
     cout << "Statistics:" << endl;
-    cout << "Total courses: " << n << endl;
-    cout << "Total conflicts: " << m << endl;
-    cout << "Exam slots used: " << num_colors << endl;
-    cout << "Average courses per slot: " << fixed;
-    cout.precision(2);
-    cout << (double)n / num_colors << endl;
+    cout << "Total courses: " << total_courses << endl;
+    cout << "Total conflicts: " << total_conflicts << endl;
+    cout << "Exam slots used: " << slots_needed << endl;
+    cout << "Average courses per slot: ";
+    cout << (double)total_courses / slots_needed << endl;
 
     return 0;
 }

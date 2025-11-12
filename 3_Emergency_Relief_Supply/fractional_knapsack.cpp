@@ -7,92 +7,86 @@ using namespace std;
 
 struct Item
 {
-    int id;
-    string name;
-    double weight;
-    double value;
+    int item_id;
+    string item_name;
+    double item_weight;
+    double item_value;
     double value_per_weight;
-    double fraction_taken;
+    double fraction_used;
 };
 
-// Sorts items by their value-to-weight ratio in descending order
-bool compareItems(const Item &a, const Item &b)
+// compare items by value per weight ratio
+bool compareItems(const Item &first_item, const Item &second_item)
 {
-    return a.value_per_weight > b.value_per_weight;
+    return first_item.value_per_weight > second_item.value_per_weight;
 }
 
-// Greedy algorithm to maximize value within weight capacity constraints
-double fractionalKnapsack(vector<Item> &items, double capacity)
+// maximize value within weight limit
+double fractionalKnapsack(vector<Item> &all_items, double max_capacity)
 {
-    if (capacity <= 0 || items.empty())
+    if (max_capacity <= 0 || all_items.empty())
         return 0.0;
 
-    sort(items.begin(), items.end(), compareItems);
+    sort(all_items.begin(), all_items.end(), compareItems);
 
-    double total_value = 0.0;
-    double remaining_capacity = capacity;
+    double total_value_collected = 0.0;
+    double remaining_capacity = max_capacity;
 
-    for (auto &item : items)
+    for (int i = 0; i < all_items.size(); i++)
     {
         if (remaining_capacity <= 0)
             break;
 
-        if (item.weight <= remaining_capacity)
+        if (all_items[i].item_weight <= remaining_capacity)
         {
-            item.fraction_taken = 1.0;
-            total_value += item.value;
-            remaining_capacity -= item.weight;
+            all_items[i].fraction_used = 1.0;
+            total_value_collected += all_items[i].item_value;
+            remaining_capacity -= all_items[i].item_weight;
         }
         else
         {
-            item.fraction_taken = remaining_capacity / item.weight;
-            total_value += item.value * item.fraction_taken;
+            all_items[i].fraction_used = remaining_capacity / all_items[i].item_weight;
+            total_value_collected += all_items[i].item_value * all_items[i].fraction_used;
             remaining_capacity = 0;
         }
     }
 
-    return total_value;
+    return total_value_collected;
 }
 
 int main()
 {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    // Hardcoded input data
-    double capacity = 50;
-    vector<Item> items = {
+    double bag_capacity = 50;
+    vector<Item> supply_items = {
         {1, "Medicine Kit", 10, 60, 0, 0},
         {2, "Food Packets", 20, 100, 0, 0},
         {3, "Drinking Water", 30, 120, 0, 0},
         {4, "Blankets", 15, 45, 0, 0},
         {5, "First Aid", 5, 30, 0, 0}};
 
-    // Calculate value per weight ratio
-    for (auto &item : items)
+    for (int i = 0; i < supply_items.size(); i++)
     {
-        if (item.weight > 0)
-            item.value_per_weight = item.value / item.weight;
+        if (supply_items[i].item_weight > 0)
+            supply_items[i].value_per_weight = supply_items[i].item_value / supply_items[i].item_weight;
         else
-            item.value_per_weight = 0;
+            supply_items[i].value_per_weight = 0;
     }
 
-    double max_value = fractionalKnapsack(items, capacity);
+    double maximum_value = fractionalKnapsack(supply_items, bag_capacity);
 
-    // Display results
     cout << fixed << setprecision(2);
-    cout << "Maximum Utility Value: " << max_value << endl;
+    cout << "Maximum Utility Value: " << maximum_value << endl;
     cout << "\nItems Selected:" << endl;
     cout << "ID\tName\t\t\tWeight\tValue\tFraction" << endl;
     cout << "------------------------------------------------------" << endl;
 
-    for (const auto &item : items)
+    for (int i = 0; i < supply_items.size(); i++)
     {
-        if (item.fraction_taken > 0)
+        if (supply_items[i].fraction_used > 0)
         {
-            cout << item.id << "\t" << item.name << "\t\t"
-                 << item.weight << "\t" << item.value << "\t"
-                 << item.fraction_taken << endl;
+            cout << supply_items[i].item_id << "\t" << supply_items[i].item_name << "\t\t"
+                 << supply_items[i].item_weight << "\t" << supply_items[i].item_value << "\t"
+                 << supply_items[i].fraction_used << endl;
         }
     }
 

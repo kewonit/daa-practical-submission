@@ -1,76 +1,72 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <iomanip>
 
 using namespace std;
 
 struct Item
 {
-    int id;
-    string name;
-    int weight;
-    int value;
-    int priority;
-    bool selected;
+    int item_id;
+    string item_name;
+    int item_weight;
+    int item_value;
+    int priority_level;
+    bool is_selected;
 };
 
-// Dynamic programming table-building approach for optimal item selection
-int knapsack01(vector<Item> &items, int capacity, vector<vector<int>> &dp)
+// build table to find maximum value combination
+int knapsack01(vector<Item> &all_items, int bag_capacity, vector<vector<int>> &value_table)
 {
-    int n = items.size();
+    int total_items = all_items.size();
 
-    for (int i = 1; i <= n; i++)
+    for (int item_index = 1; item_index <= total_items; item_index++)
     {
-        for (int w = 0; w <= capacity; w++)
+        for (int current_weight = 0; current_weight <= bag_capacity; current_weight++)
         {
-            if (items[i - 1].weight > w)
+            if (all_items[item_index - 1].item_weight > current_weight)
             {
-                dp[i][w] = dp[i - 1][w];
+                value_table[item_index][current_weight] = value_table[item_index - 1][current_weight];
             }
             else
             {
-                dp[i][w] = max(dp[i - 1][w],
-                               dp[i - 1][w - items[i - 1].weight] + items[i - 1].value);
+                int without_item = value_table[item_index - 1][current_weight];
+                int with_item = value_table[item_index - 1][current_weight - all_items[item_index - 1].item_weight] + all_items[item_index - 1].item_value;
+                value_table[item_index][current_weight] = max(without_item, with_item);
             }
         }
     }
 
-    return dp[n][capacity];
+    return value_table[total_items][bag_capacity];
 }
 
-// Traces back through DP table to identify which items were included
-void findSelectedItems(vector<Item> &items, int capacity, const vector<vector<int>> &dp)
+// figure out which items were picked
+void findSelectedItems(vector<Item> &all_items, int bag_capacity, const vector<vector<int>> &value_table)
 {
-    int n = items.size();
-    int w = capacity;
+    int total_items = all_items.size();
+    int remaining_weight = bag_capacity;
 
-    for (int i = n; i > 0 && w > 0; i--)
+    for (int item_index = total_items; item_index > 0 && remaining_weight > 0; item_index--)
     {
-        if (dp[i][w] != dp[i - 1][w])
+        if (value_table[item_index][remaining_weight] != value_table[item_index - 1][remaining_weight])
         {
-            items[i - 1].selected = true;
-            w -= items[i - 1].weight;
+            all_items[item_index - 1].is_selected = true;
+            remaining_weight -= all_items[item_index - 1].item_weight;
         }
     }
 }
 
-// Prioritizes high-value items within the same priority level
-bool comparePriority(const Item &a, const Item &b)
+// sort items by priority and value
+bool comparePriority(const Item &first_item, const Item &second_item)
 {
-    if (a.priority != b.priority)
-        return a.priority < b.priority;
-    return a.value > b.value;
+    if (first_item.priority_level != second_item.priority_level)
+        return first_item.priority_level < second_item.priority_level;
+    return first_item.item_value > second_item.item_value;
 }
 
 int main()
 {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    // Hardcoded input data
-    int capacity = 50;
-    vector<Item> items = {
+    int bag_capacity = 50;
+    vector<Item> relief_items = {
         {1, "Medicine Kit", 15, 100, 1, false},
         {2, "Antibiotics", 8, 80, 1, false},
         {3, "Food Packets", 20, 60, 2, false},
@@ -79,68 +75,68 @@ int main()
         {6, "Tents", 25, 70, 3, false},
         {7, "First Aid", 5, 50, 1, false}};
 
-    int n = items.size();
-    sort(items.begin(), items.end(), comparePriority);
+    int total_items = relief_items.size();
+    sort(relief_items.begin(), relief_items.end(), comparePriority);
 
-    // Build DP table for knapsack solution
-    vector<vector<int>> dp(n + 1, vector<int>(capacity + 1, 0));
-    int max_value = knapsack01(items, capacity, dp);
+    vector<vector<int>> value_table(total_items + 1, vector<int>(bag_capacity + 1, 0));
+    int maximum_value = knapsack01(relief_items, bag_capacity, value_table);
 
-    findSelectedItems(items, capacity, dp);
+    findSelectedItems(relief_items, bag_capacity, value_table);
 
-    // Calculate total weight of selected items
-    int total_weight = 0;
-    for (const auto &item : items)
+    int total_weight_used = 0;
+    for (int i = 0; i < relief_items.size(); i++)
     {
-        if (item.selected)
+        if (relief_items[i].is_selected)
         {
-            total_weight += item.weight;
+            total_weight_used += relief_items[i].item_weight;
         }
     }
 
-    // Display results
-    cout << "Maximum Utility Value: " << max_value << endl;
-    cout << "Total Weight Used: " << total_weight << " kg (Capacity: " << capacity << " kg)" << endl;
+    cout << "Maximum Utility Value: " << maximum_value << endl;
+    cout << "Total Weight Used: " << total_weight_used << " kg (Capacity: " << bag_capacity << " kg)" << endl;
     cout << "\nItems Selected:" << endl;
     cout << "ID\tName\t\t\tWeight\tValue\tPriority" << endl;
     cout << "-----------------------------------------------------------" << endl;
 
-    for (const auto &item : items)
+    for (int i = 0; i < relief_items.size(); i++)
     {
-        if (item.selected)
+        if (relief_items[i].is_selected)
         {
-            string priority_str;
-            if (item.priority == 1)
-                priority_str = "High";
-            else if (item.priority == 2)
-                priority_str = "Medium";
+            string priority_name;
+            if (relief_items[i].priority_level == 1)
+                priority_name = "High";
+            else if (relief_items[i].priority_level == 2)
+                priority_name = "Medium";
             else
-                priority_str = "Low";
+                priority_name = "Low";
 
-            cout << item.id << "\t" << item.name << "\t\t"
-                 << item.weight << "\t" << item.value << "\t"
-                 << priority_str << endl;
+            cout << relief_items[i].item_id << "\t" << relief_items[i].item_name << "\t\t"
+                 << relief_items[i].item_weight << "\t" << relief_items[i].item_value << "\t"
+                 << priority_name << endl;
         }
     }
 
-    // Summary breakdown by priority
     cout << "\nPriority-wise breakdown:" << endl;
-    int high_count = 0, medium_count = 0, low_count = 0;
-    for (const auto &item : items)
+    int high_priority_count = 0;
+    int medium_priority_count = 0;
+    int low_priority_count = 0;
+
+    for (int i = 0; i < relief_items.size(); i++)
     {
-        if (item.selected)
+        if (relief_items[i].is_selected)
         {
-            if (item.priority == 1)
-                high_count++;
-            else if (item.priority == 2)
-                medium_count++;
+            if (relief_items[i].priority_level == 1)
+                high_priority_count++;
+            else if (relief_items[i].priority_level == 2)
+                medium_priority_count++;
             else
-                low_count++;
+                low_priority_count++;
         }
     }
-    cout << "High priority items: " << high_count << endl;
-    cout << "Medium priority items: " << medium_count << endl;
-    cout << "Low priority items: " << low_count << endl;
+
+    cout << "High priority items: " << high_priority_count << endl;
+    cout << "Medium priority items: " << medium_priority_count << endl;
+    cout << "Low priority items: " << low_priority_count << endl;
 
     return 0;
 }

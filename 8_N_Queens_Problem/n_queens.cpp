@@ -1,57 +1,58 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
 struct Solution
 {
-    vector<int> board;
+    vector<int> queen_positions;
 };
 
-vector<Solution> allSolutions;
-vector<int> board;
-int n;
+vector<Solution> all_solutions;
+vector<int> board_state;
+int board_size;
 
-// Checks if queen can be placed at given position
-bool isSafe(int row, int col)
+// check if queen placement is valid
+bool isSafe(int current_row, int current_col)
 {
-    for (int i = 0; i < row; i++)
+    for (int previous_row = 0; previous_row < current_row; previous_row++)
     {
-        if (board[i] == col || abs(board[i] - col) == abs(i - row))
+        int previous_col = board_state[previous_row];
+        if (previous_col == current_col || abs(previous_col - current_col) == abs(previous_row - current_row))
             return false;
     }
     return true;
 }
 
-// Recursive backtracking to place queens row by row
-void placeQueens(int row)
+// place queens row by row
+void placeQueens(int current_row)
 {
-    if (row == n)
+    if (current_row == board_size)
     {
-        Solution s;
-        s.board = board;
-        allSolutions.push_back(s);
+        Solution new_solution;
+        new_solution.queen_positions = board_state;
+        all_solutions.push_back(new_solution);
         return;
     }
-    for (int col = 0; col < n; col++)
+
+    for (int col = 0; col < board_size; col++)
     {
-        if (isSafe(row, col))
+        if (isSafe(current_row, col))
         {
-            board[row] = col;
-            placeQueens(row + 1);
+            board_state[current_row] = col;
+            placeQueens(current_row + 1);
         }
     }
 }
 
-// Prints a single board configuration
-void printBoard(const vector<int> &b)
+// print one board solution
+void printBoard(const vector<int> &positions)
 {
-    for (int i = 0; i < n; i++)
+    for (int row = 0; row < board_size; row++)
     {
-        for (int j = 0; j < n; j++)
+        for (int col = 0; col < board_size; col++)
         {
-            if (b[i] == j)
+            if (positions[row] == col)
                 cout << "Q ";
             else
                 cout << ". ";
@@ -63,39 +64,32 @@ void printBoard(const vector<int> &b)
 
 int main()
 {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    // Hardcoded input data
-    n = 8;
-
-    board.resize(n);
+    board_size = 8;
+    board_state.resize(board_size);
 
     placeQueens(0);
 
-    cout << "N-Queens Problem for N = " << n << '\n';
-    cout << "Total solutions found: " << allSolutions.size() << "\n\n";
+    cout << "N-Queens Problem for N = " << board_size << '\n';
+    cout << "Total solutions found: " << all_solutions.size() << "\n\n";
 
-    // Display first 4 solutions
-    int display = min(4, (int)allSolutions.size());
-    for (int i = 0; i < display; i++)
+    int solutions_to_show = min(4, (int)all_solutions.size());
+    for (int i = 0; i < solutions_to_show; i++)
     {
         cout << "Solution " << (i + 1) << ":\n";
-        printBoard(allSolutions[i].board);
+        printBoard(all_solutions[i].queen_positions);
     }
 
-    if (allSolutions.size() > display)
-        cout << "... and " << (allSolutions.size() - display) << " more solutions\n\n";
+    if (all_solutions.size() > solutions_to_show)
+        cout << "... and " << (all_solutions.size() - solutions_to_show) << " more solutions\n\n";
 
-    // Print all solutions in compact format
     cout << "All solutions in compact format:\n";
-    for (size_t i = 0; i < allSolutions.size(); i++)
+    for (int i = 0; i < all_solutions.size(); i++)
     {
         cout << "Solution " << (i + 1) << ": ";
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < board_size; j++)
         {
-            cout << allSolutions[i].board[j];
-            if (j < n - 1)
+            cout << all_solutions[i].queen_positions[j];
+            if (j < board_size - 1)
                 cout << " ";
         }
         cout << '\n';

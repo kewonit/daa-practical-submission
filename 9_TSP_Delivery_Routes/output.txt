@@ -1,0 +1,18 @@
+=== Traveling Salesman Problem (TSP) - LC Branch and Bound ===
+Number of cities: 5
+
+Optimal Route:
+0 -> 2 -> 4 -> 3 -> 1 -> 0
+
+Minimum Cost (Total Distance): 65
+
+Route Details:
+City    Next City       Distance
+-----------------------------
+0       2               15
+2       4               10
+4       3               5
+3       1               25
+1       0               10
+-----------------------------
+TOTAL COST: 65
