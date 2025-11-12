@@ -66,12 +66,13 @@ void mergeSort(vector<Order> &orders, int start_index, int end_index)
 
 int main()
 {
-    vector<Order> all_orders = {
-        {101, 1609459200},
-        {102, 1609455600},
-        {103, 1609462800},
-        {104, 1609457400},
-        {105, 1609460000}};
+    vector<Order> all_orders;
+    
+    Order order1; order1.order_id = 101; order1.order_timestamp = 1609459200; all_orders.push_back(order1);
+    Order order2; order2.order_id = 102; order2.order_timestamp = 1609455600; all_orders.push_back(order2);
+    Order order3; order3.order_id = 103; order3.order_timestamp = 1609462800; all_orders.push_back(order3);
+    Order order4; order4.order_id = 104; order4.order_timestamp = 1609457400; all_orders.push_back(order4);
+    Order order5; order5.order_id = 105; order5.order_timestamp = 1609460000; all_orders.push_back(order5);
 
     int total_orders = all_orders.size();
     mergeSort(all_orders, 0, total_orders - 1);

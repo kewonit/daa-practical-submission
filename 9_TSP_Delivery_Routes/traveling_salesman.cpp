@@ -14,7 +14,7 @@ struct Node
     long long lower_bound;
     int last_city;
     vector<int> visited_path;
-    vector<vector<long long>> cost_matrix;
+    vector<vector<long long> > cost_matrix;
 };
 
 struct CompareNode
@@ -26,7 +26,7 @@ struct CompareNode
 };
 
 // reduce matrix rows and columns
-long long reduceCostMatrix(vector<vector<long long>> &cost_matrix, int city_count)
+long long reduceCostMatrix(vector<vector<long long> > &cost_matrix, int city_count)
 {
     long long total_reduction = 0;
 
@@ -80,7 +80,7 @@ long long reduceCostMatrix(vector<vector<long long>> &cost_matrix, int city_coun
 }
 
 // find shortest tour visiting all cities
-pair<long long, vector<int>> tspBranchAndBound(const vector<vector<long long>> &distance_matrix)
+pair<long long, vector<int> > tspBranchAndBound(const vector<vector<long long> > &distance_matrix)
 {
     int city_count = distance_matrix.size();
     long long best_cost = INFINITY_VALUE;
@@ -165,7 +165,10 @@ pair<long long, vector<int>> tspBranchAndBound(const vector<vector<long long>> &
         }
     }
 
-    return {best_cost, best_tour};
+    pair<long long, vector<int> > result;
+    result.first = best_cost;
+    result.second = best_tour;
+    return result;
 }
 
 int main()
@@ -173,18 +176,35 @@ int main()
     int city_count;
     cin >> city_count;
 
-    vector<vector<long long>> distance_matrix(city_count, vector<long long>(city_count));
+    if (cin.fail() || city_count <= 0)
+    {
+        cerr << "Error: Invalid input for number of cities" << endl;
+        return 1;
+    }
+
+    vector<vector<long long> > distance_matrix(city_count, vector<long long>(city_count));
     for (int i = 0; i < city_count; i++)
     {
         for (int j = 0; j < city_count; j++)
         {
             cin >> distance_matrix[i][j];
+            if (cin.fail())
+            {
+                cerr << "Error: Invalid input for distance matrix" << endl;
+                return 1;
+            }
         }
     }
 
-    auto result = tspBranchAndBound(distance_matrix);
+    pair<long long, vector<int> > result = tspBranchAndBound(distance_matrix);
     long long minimum_cost = result.first;
     vector<int> optimal_tour = result.second;
+
+    if (optimal_tour.empty())
+    {
+        cerr << "Error: No solution found" << endl;
+        return 1;
+    }
 
     cout << "=== Traveling Salesman Problem (TSP) - LC Branch and Bound ===" << endl;
     cout << "Number of cities: " << city_count << endl;

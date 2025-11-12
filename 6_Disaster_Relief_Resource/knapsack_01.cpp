@@ -15,7 +15,7 @@ struct Item
 };
 
 // build table to find maximum value combination
-int knapsack01(vector<Item> &all_items, int bag_capacity, vector<vector<int>> &value_table)
+int knapsack01(vector<Item> &all_items, int bag_capacity, vector<vector<int> > &value_table)
 {
     int total_items = all_items.size();
 
@@ -40,7 +40,7 @@ int knapsack01(vector<Item> &all_items, int bag_capacity, vector<vector<int>> &v
 }
 
 // figure out which items were picked
-void findSelectedItems(vector<Item> &all_items, int bag_capacity, const vector<vector<int>> &value_table)
+void findSelectedItems(vector<Item> &all_items, int bag_capacity, const vector<vector<int> > &value_table)
 {
     int total_items = all_items.size();
     int remaining_weight = bag_capacity;
@@ -66,19 +66,20 @@ bool comparePriority(const Item &first_item, const Item &second_item)
 int main()
 {
     int bag_capacity = 50;
-    vector<Item> relief_items = {
-        {1, "Medicine Kit", 15, 100, 1, false},
-        {2, "Antibiotics", 8, 80, 1, false},
-        {3, "Food Packets", 20, 60, 2, false},
-        {4, "Drinking Water", 12, 40, 2, false},
-        {5, "Blankets", 10, 30, 3, false},
-        {6, "Tents", 25, 70, 3, false},
-        {7, "First Aid", 5, 50, 1, false}};
+    vector<Item> relief_items;
+    
+    Item item1; item1.item_id = 1; item1.item_name = "Medicine Kit"; item1.item_weight = 15; item1.item_value = 100; item1.priority_level = 1; item1.is_selected = false; relief_items.push_back(item1);
+    Item item2; item2.item_id = 2; item2.item_name = "Antibiotics"; item2.item_weight = 8; item2.item_value = 80; item2.priority_level = 1; item2.is_selected = false; relief_items.push_back(item2);
+    Item item3; item3.item_id = 3; item3.item_name = "Food Packets"; item3.item_weight = 20; item3.item_value = 60; item3.priority_level = 2; item3.is_selected = false; relief_items.push_back(item3);
+    Item item4; item4.item_id = 4; item4.item_name = "Drinking Water"; item4.item_weight = 12; item4.item_value = 40; item4.priority_level = 2; item4.is_selected = false; relief_items.push_back(item4);
+    Item item5; item5.item_id = 5; item5.item_name = "Blankets"; item5.item_weight = 10; item5.item_value = 30; item5.priority_level = 3; item5.is_selected = false; relief_items.push_back(item5);
+    Item item6; item6.item_id = 6; item6.item_name = "Tents"; item6.item_weight = 25; item6.item_value = 70; item6.priority_level = 3; item6.is_selected = false; relief_items.push_back(item6);
+    Item item7; item7.item_id = 7; item7.item_name = "First Aid"; item7.item_weight = 5; item7.item_value = 50; item7.priority_level = 1; item7.is_selected = false; relief_items.push_back(item7);
 
     int total_items = relief_items.size();
     sort(relief_items.begin(), relief_items.end(), comparePriority);
 
-    vector<vector<int>> value_table(total_items + 1, vector<int>(bag_capacity + 1, 0));
+    vector<vector<int> > value_table(total_items + 1, vector<int>(bag_capacity + 1, 0));
     int maximum_value = knapsack01(relief_items, bag_capacity, value_table);
 
     findSelectedItems(relief_items, bag_capacity, value_table);

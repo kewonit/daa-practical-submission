@@ -57,12 +57,13 @@ void quickSort(vector<Movie> &movie_list, int low_index, int high_index)
 
 int main()
 {
-    vector<Movie> all_movies = {
-        {101, "The Shawshank Redemption", 9.3, 1994, 15000000},
-        {102, "The Godfather", 9.2, 1972, 12000000},
-        {103, "The Dark Knight", 9.0, 2008, 20000000},
-        {104, "Pulp Fiction", 8.9, 1994, 10000000},
-        {105, "Forrest Gump", 8.8, 1994, 18000000}};
+    vector<Movie> all_movies;
+    
+    Movie movie1; movie1.movie_id = 101; movie1.movie_name = "The Shawshank Redemption"; movie1.movie_rating = 9.3; movie1.release_year = 1994; movie1.total_watch_time = 15000000; all_movies.push_back(movie1);
+    Movie movie2; movie2.movie_id = 102; movie2.movie_name = "The Godfather"; movie2.movie_rating = 9.2; movie2.release_year = 1972; movie2.total_watch_time = 12000000; all_movies.push_back(movie2);
+    Movie movie3; movie3.movie_id = 103; movie3.movie_name = "The Dark Knight"; movie3.movie_rating = 9.0; movie3.release_year = 2008; movie3.total_watch_time = 20000000; all_movies.push_back(movie3);
+    Movie movie4; movie4.movie_id = 104; movie4.movie_name = "Pulp Fiction"; movie4.movie_rating = 8.9; movie4.release_year = 1994; movie4.total_watch_time = 10000000; all_movies.push_back(movie4);
+    Movie movie5; movie5.movie_id = 105; movie5.movie_name = "Forrest Gump"; movie5.movie_rating = 8.8; movie5.release_year = 1994; movie5.total_watch_time = 18000000; all_movies.push_back(movie5);
 
     int user_criteria = 1;
     sort_criteria = user_criteria;

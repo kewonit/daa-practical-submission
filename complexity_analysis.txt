@@ -1,0 +1,169 @@
+================================================================================
+       TIME AND SPACE COMPLEXITY ANALYSIS - DAA PRACTICAL PROGRAMS
+================================================================================
+
+1. MERGE SORT (Customer Order Sorting System)
+   Algorithm: Divide and Conquer
+   
+   Time Complexity:
+   - Best Case:    O(n log n)  [Already sorted or any input]
+   - Average Case: O(n log n)  [Random order]
+   - Worst Case:   O(n log n)  [Reverse sorted or any input]
+   
+   Space Complexity: O(n)  [Requires additional arrays for merging]
+   
+   Note: Stable sort, consistent performance regardless of input distribution
+
+--------------------------------------------------------------------------------
+
+2. QUICK SORT (Movie Recommendation System)
+   Algorithm: Divide and Conquer
+   
+   Time Complexity:
+   - Best Case:    O(n log n)  [Pivot divides array equally]
+   - Average Case: O(n log n)  [Random pivot selection]
+   - Worst Case:   O(n²)       [Already sorted with bad pivot choice]
+   
+   Space Complexity: O(log n)  [Recursion stack for balanced partitions]
+                     O(n) worst case [Unbalanced partitions]
+   
+   Note: In-place sort, performance depends on pivot selection
+
+--------------------------------------------------------------------------------
+
+3. FRACTIONAL KNAPSACK (Emergency Relief Supply)
+   Algorithm: Greedy
+   
+   Time Complexity:
+   - Best Case:    O(n log n)  [Sorting dominates]
+   - Average Case: O(n log n)  [Sorting + O(n) selection]
+   - Worst Case:   O(n log n)  [Sorting required for all cases]
+   
+   Space Complexity: O(1)  [No extra space except sort (can be in-place)]
+   
+   Note: Greedy choice property, optimal solution guaranteed
+
+--------------------------------------------------------------------------------
+
+4. DIJKSTRA'S ALGORITHM (Smart Traffic Management)
+   Algorithm: Greedy / Shortest Path
+   
+   Time Complexity:
+   - Best Case:    O((V + E) log V)  [With priority queue/min-heap]
+   - Average Case: O((V + E) log V)  [Standard case]
+   - Worst Case:   O((V + E) log V)  [Dense graph where E ≈ V²]
+   
+   Space Complexity: O(V + E)  [Adjacency list + distance/parent arrays]
+   
+   Note: V = vertices, E = edges; requires non-negative edge weights
+
+--------------------------------------------------------------------------------
+
+5. MULTISTAGE GRAPH (Multi-Stage Delivery)
+   Algorithm: Dynamic Programming
+   
+   Time Complexity:
+   - Best Case:    O(V + E)  [Linear scan through nodes and edges]
+   - Average Case: O(V + E)  [Process each edge once]
+   - Worst Case:   O(V + E)  [All nodes and edges examined]
+   
+   Space Complexity: O(V + E)  [Adjacency list, cost and parent arrays]
+   
+   Note: Optimal substructure, works for directed acyclic graphs (DAG)
+
+--------------------------------------------------------------------------------
+
+6. 0/1 KNAPSACK (Disaster Relief Resource)
+   Algorithm: Dynamic Programming
+   
+   Time Complexity:
+   - Best Case:    O(n × W)  [All entries computed]
+   - Average Case: O(n × W)  [DP table filling]
+   - Worst Case:   O(n × W)  [Complete DP table required]
+   
+   Space Complexity: O(n × W)  [2D DP table]
+                     Can be optimized to O(W) with 1D array
+   
+   Note: n = items, W = capacity; pseudo-polynomial time complexity
+
+--------------------------------------------------------------------------------
+
+7. GRAPH COLORING (University Timetable Scheduling)
+   Algorithm: Backtracking / Greedy Heuristics
+   
+   A) Greedy Coloring:
+   Time Complexity:
+   - Best Case:    O(V + E)  [Simple sequential coloring]
+   - Average Case: O(V + E)  [Linear graph traversal]
+   - Worst Case:   O(V + E)  [Check all neighbors]
+   
+   Space Complexity: O(V + E)  [Adjacency list + color array]
+   
+   B) DSATUR (Degree of Saturation):
+   Time Complexity:
+   - Best Case:    O(V²)     [Finding max saturation each iteration]
+   - Average Case: O(V²)     [V iterations with neighbor checks]
+   - Worst Case:   O(V²)     [Dense graph scenario]
+   
+   Space Complexity: O(V + E)  [Graph storage + additional sets]
+   
+   Note: Greedy heuristic, not guaranteed optimal but efficient
+
+--------------------------------------------------------------------------------
+
+8. N-QUEENS PROBLEM
+   Algorithm: Backtracking
+   
+   Time Complexity:
+   - Best Case:    O(n!)     [Exploring all possible placements]
+   - Average Case: O(n!)     [Exponential backtracking]
+   - Worst Case:   O(n!)     [Complete search tree exploration]
+   
+   Space Complexity: O(n)    [Board state array + recursion stack]
+   
+   Note: Classic backtracking problem, exponential time complexity
+
+--------------------------------------------------------------------------------
+
+9. TRAVELING SALESMAN PROBLEM (TSP - Branch and Bound)
+   Algorithm: Branch and Bound with LC (Least Cost)
+   
+   Time Complexity:
+   - Best Case:    O(n²)     [Optimal pruning with tight bounds]
+   - Average Case: O(n² × 2ⁿ) [Exponential with pruning]
+   - Worst Case:   O(n!)     [Explores all permutations]
+   
+   Space Complexity: O(n²)   [Cost matrix + priority queue nodes]
+   
+   Note: NP-hard problem, branch and bound provides better average
+         performance than brute force O(n!) through intelligent pruning
+
+================================================================================
+
+ALGORITHM CATEGORIES SUMMARY:
+
+Sorting Algorithms:
+  - Merge Sort: O(n log n) time, O(n) space
+  - Quick Sort: O(n log n) avg, O(n²) worst, O(log n) space
+
+Greedy Algorithms:
+  - Fractional Knapsack: O(n log n) time, O(1) space
+  - Dijkstra's Algorithm: O((V+E) log V) time, O(V+E) space
+
+Dynamic Programming:
+  - Multistage Graph: O(V+E) time, O(V+E) space
+  - 0/1 Knapsack: O(n×W) time, O(n×W) space
+
+Backtracking/Branch & Bound:
+  - Graph Coloring: O(V+E) to O(V²) depending on method
+  - N-Queens: O(n!) time, O(n) space
+  - TSP Branch & Bound: O(n²×2ⁿ) avg, O(n!) worst, O(n²) space
+
+================================================================================
+Legend:
+n = number of elements/items
+V = number of vertices/nodes
+E = number of edges
+W = capacity/weight limit
+O() = Big-O notation (upper bound)
+================================================================================

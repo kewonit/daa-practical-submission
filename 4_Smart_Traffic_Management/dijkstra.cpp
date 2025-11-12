@@ -26,15 +26,18 @@ struct Node
 };
 
 // find shortest paths from start to all nodes
-vector<int> dijkstra(int total_nodes, vector<vector<Edge>> &graph, int start_node, vector<int> &parent_nodes)
+vector<int> dijkstra(int total_nodes, vector<vector<Edge> > &graph, int start_node, vector<int> &parent_nodes)
 {
     vector<int> shortest_distances(total_nodes, INFINITY_DISTANCE);
     vector<bool> visited_nodes(total_nodes, false);
-    priority_queue<Node, vector<Node>, greater<Node>> node_queue;
+    priority_queue<Node, vector<Node>, greater<Node> > node_queue;
 
     shortest_distances[start_node] = 0;
     parent_nodes[start_node] = -1;
-    node_queue.push({start_node, 0});
+    Node start_node_obj;
+    start_node_obj.node_id = start_node;
+    start_node_obj.distance_from_source = 0;
+    node_queue.push(start_node_obj);
 
     while (!node_queue.empty())
     {
@@ -60,7 +63,10 @@ vector<int> dijkstra(int total_nodes, vector<vector<Edge>> &graph, int start_nod
                 {
                     shortest_distances[neighbor_id] = new_distance;
                     parent_nodes[neighbor_id] = current_id;
-                    node_queue.push({neighbor_id, shortest_distances[neighbor_id]});
+                    Node next_node;
+                    next_node.node_id = neighbor_id;
+                    next_node.distance_from_source = shortest_distances[neighbor_id];
+                    node_queue.push(next_node);
                 }
             }
         }
@@ -94,17 +100,17 @@ int main()
     int total_edges = 9;
     int ambulance_location = 0;
 
-    vector<vector<Edge>> traffic_graph(total_nodes);
+    vector<vector<Edge> > traffic_graph(total_nodes);
 
-    traffic_graph[0].push_back({1, 4});
-    traffic_graph[0].push_back({2, 2});
-    traffic_graph[1].push_back({2, 1});
-    traffic_graph[1].push_back({3, 5});
-    traffic_graph[2].push_back({3, 8});
-    traffic_graph[2].push_back({4, 10});
-    traffic_graph[3].push_back({4, 2});
-    traffic_graph[3].push_back({5, 6});
-    traffic_graph[4].push_back({5, 3});
+    Edge edge1; edge1.destination_node = 1; edge1.edge_weight = 4; traffic_graph[0].push_back(edge1);
+    Edge edge2; edge2.destination_node = 2; edge2.edge_weight = 2; traffic_graph[0].push_back(edge2);
+    Edge edge3; edge3.destination_node = 2; edge3.edge_weight = 1; traffic_graph[1].push_back(edge3);
+    Edge edge4; edge4.destination_node = 3; edge4.edge_weight = 5; traffic_graph[1].push_back(edge4);
+    Edge edge5; edge5.destination_node = 3; edge5.edge_weight = 8; traffic_graph[2].push_back(edge5);
+    Edge edge6; edge6.destination_node = 4; edge6.edge_weight = 10; traffic_graph[2].push_back(edge6);
+    Edge edge7; edge7.destination_node = 4; edge7.edge_weight = 2; traffic_graph[3].push_back(edge7);
+    Edge edge8; edge8.destination_node = 5; edge8.edge_weight = 6; traffic_graph[3].push_back(edge8);
+    Edge edge9; edge9.destination_node = 5; edge9.edge_weight = 3; traffic_graph[4].push_back(edge9);
 
     vector<int> parent_nodes(total_nodes);
     vector<int> shortest_distances = dijkstra(total_nodes, traffic_graph, ambulance_location, parent_nodes);

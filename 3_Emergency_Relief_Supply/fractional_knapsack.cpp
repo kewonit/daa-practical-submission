@@ -57,12 +57,19 @@ double fractionalKnapsack(vector<Item> &all_items, double max_capacity)
 int main()
 {
     double bag_capacity = 50;
-    vector<Item> supply_items = {
-        {1, "Medicine Kit", 10, 60, 0, 0},
-        {2, "Food Packets", 20, 100, 0, 0},
-        {3, "Drinking Water", 30, 120, 0, 0},
-        {4, "Blankets", 15, 45, 0, 0},
-        {5, "First Aid", 5, 30, 0, 0}};
+    vector<Item> supply_items;
+    
+    Item item1; item1.item_id = 1; item1.item_name = "Medicine Kit"; item1.item_weight = 10; item1.item_value = 60; item1.value_per_weight = 0; item1.fraction_used = 0;
+    Item item2; item2.item_id = 2; item2.item_name = "Food Packets"; item2.item_weight = 20; item2.item_value = 100; item2.value_per_weight = 0; item2.fraction_used = 0;
+    Item item3; item3.item_id = 3; item3.item_name = "Drinking Water"; item3.item_weight = 30; item3.item_value = 120; item3.value_per_weight = 0; item3.fraction_used = 0;
+    Item item4; item4.item_id = 4; item4.item_name = "Blankets"; item4.item_weight = 15; item4.item_value = 45; item4.value_per_weight = 0; item4.fraction_used = 0;
+    Item item5; item5.item_id = 5; item5.item_name = "First Aid"; item5.item_weight = 5; item5.item_value = 30; item5.value_per_weight = 0; item5.fraction_used = 0;
+    
+    supply_items.push_back(item1);
+    supply_items.push_back(item2);
+    supply_items.push_back(item3);
+    supply_items.push_back(item4);
+    supply_items.push_back(item5);
 
     for (int i = 0; i < supply_items.size(); i++)
     {

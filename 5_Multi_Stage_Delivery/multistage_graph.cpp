@@ -52,7 +52,10 @@ pair<int, vector<int>> multistageGraph(int total_nodes, int total_stages, const 
 
     if (cheapest_cost[destination_node] == INFINITY_COST)
     {
-        return {-1, delivery_path};
+        pair<int, vector<int>> result;
+        result.first = -1;
+        result.second = delivery_path;
+        return result;
     }
 
     int path_node = destination_node;
@@ -64,7 +67,10 @@ pair<int, vector<int>> multistageGraph(int total_nodes, int total_stages, const 
 
     reverse(delivery_path.begin(), delivery_path.end());
 
-    return {cheapest_cost[destination_node], delivery_path};
+    pair<int, vector<int>> result;
+    result.first = cheapest_cost[destination_node];
+    result.second = delivery_path;
+    return result;
 }
 
 int main()
@@ -73,12 +79,26 @@ int main()
     int total_edges = 13;
     int total_stages = 4;
 
-    vector<int> node_stages = {0, 1, 1, 2, 2, 2, 3, 3};
+    vector<int> node_stages;
+    node_stages.push_back(0); node_stages.push_back(1); node_stages.push_back(1); node_stages.push_back(2);
+    node_stages.push_back(2); node_stages.push_back(2); node_stages.push_back(3); node_stages.push_back(3);
 
-    vector<Edge> delivery_edges = {
-        {0, 1, 2}, {0, 2, 3}, {0, 3, 6}, {1, 4, 4}, {1, 5, 5}, {2, 4, 2}, {2, 5, 4}, {3, 5, 3}, {4, 6, 3}, {4, 7, 6}, {5, 6, 5}, {5, 7, 2}, {6, 7, 4}};
+    vector<Edge> delivery_edges;
+    Edge e1; e1.from_node = 0; e1.to_node = 1; e1.delivery_cost = 2; delivery_edges.push_back(e1);
+    Edge e2; e2.from_node = 0; e2.to_node = 2; e2.delivery_cost = 3; delivery_edges.push_back(e2);
+    Edge e3; e3.from_node = 0; e3.to_node = 3; e3.delivery_cost = 6; delivery_edges.push_back(e3);
+    Edge e4; e4.from_node = 1; e4.to_node = 4; e4.delivery_cost = 4; delivery_edges.push_back(e4);
+    Edge e5; e5.from_node = 1; e5.to_node = 5; e5.delivery_cost = 5; delivery_edges.push_back(e5);
+    Edge e6; e6.from_node = 2; e6.to_node = 4; e6.delivery_cost = 2; delivery_edges.push_back(e6);
+    Edge e7; e7.from_node = 2; e7.to_node = 5; e7.delivery_cost = 4; delivery_edges.push_back(e7);
+    Edge e8; e8.from_node = 3; e8.to_node = 5; e8.delivery_cost = 3; delivery_edges.push_back(e8);
+    Edge e9; e9.from_node = 4; e9.to_node = 6; e9.delivery_cost = 3; delivery_edges.push_back(e9);
+    Edge e10; e10.from_node = 4; e10.to_node = 7; e10.delivery_cost = 6; delivery_edges.push_back(e10);
+    Edge e11; e11.from_node = 5; e11.to_node = 6; e11.delivery_cost = 5; delivery_edges.push_back(e11);
+    Edge e12; e12.from_node = 5; e12.to_node = 7; e12.delivery_cost = 2; delivery_edges.push_back(e12);
+    Edge e13; e13.from_node = 6; e13.to_node = 7; e13.delivery_cost = 4; delivery_edges.push_back(e13);
 
-    auto result = multistageGraph(total_nodes, total_stages, delivery_edges, node_stages);
+    pair<int, vector<int>> result = multistageGraph(total_nodes, total_stages, delivery_edges, node_stages);
     int minimum_cost = result.first;
     vector<int> optimal_path = result.second;
 
